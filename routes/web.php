@@ -46,3 +46,31 @@ Route::get('/delete', function(){
 
     return redirect('/formtest');
 });
+
+Route::get('/register', function () {
+    return view('user_registration');
+});
+use App\Models\User;
+use Illuminate\Http\Request;
+Route::post('/users/store', function (Request $request) {
+    User::create($request->all());
+    return redirect('/users');
+});
+Route::get('/users', function () {
+    $users = User::all();
+    return view('users_table', compact('users'));
+});
+Route::post('/users/delete/{id}', function ($id) {
+    User::findOrFail($id)->delete();
+    return redirect('/users');
+});
+Route::get('/users/edit/{id}', function ($id) {
+    $user = User::findOrFail($id);
+    return view('edit_user', compact('user'));
+});
+Route::post('/users/update/{id}', function (Request $request, $id) {
+    $user = User::findOrFail($id);
+    $user->update($request->all());
+
+    return redirect('/users');
+});
